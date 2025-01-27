@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expanded Happy Captcha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded-lg shadow-md text-center max-w-md w-full">
+        <div id="face" class="text-8xl mb-6 transition-all duration-300">😐</div>
+        <input 
+            type="text" 
+            id="input" 
+            placeholder="Type something about me..." 
+            class="border border-gray-300 rounded px-3 py-2 mb-4 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+        <button 
+            onclick="checkInput()" 
+            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-300"
+        >
+            Submit
+        </button>
+        <div id="message" class="mt-4 font-bold"></div>
+    </div>
+
+    <script>
+        const face = document.getElementById('face');
+        const input = document.getElementById('input');
+        const message = document.getElementById('message');
+        
+        const positiveWords = [
+            'handsome', 'beautiful', 'pretty', 'cute', 'attractive', 'gorgeous', 'stunning', 'lovely', 'charming',
+            'elegant', 'graceful', 'dashing', 'smart', 'intelligent', 'brilliant', 'clever', 'wise', 'kind',
+            'gentle', 'caring', 'sweet', 'nice', 'friendly', 'funny', 'hilarious', 'witty', 'cool', 'awesome',
+            'amazing', 'wonderful', 'fantastic', 'terrific', 'great', 'excellent', 'superb', 'perfect', 'fabulous',
+            'incredible', 'marvelous', 'spectacular', 'outstanding', 'remarkable', 'extraordinary', 'talented',
+            'skilled', 'gifted', 'accomplished', 'successful', 'admirable', 'respectable', 'honorable', 'noble'
+        ];
+
+        const negativeWords = [
+            'ugly', 'unattractive', 'hideous', 'repulsive', 'disgusting', 'gross', 'nasty', 'terrible', 'horrible',
+            'awful', 'dreadful', 'bad', 'poor', 'inferior', 'mediocre', 'subpar', 'disappointing', 'unsatisfactory',
+            'stupid', 'dumb', 'idiotic', 'foolish', 'silly', 'ridiculous', 'absurd', 'mean', 'cruel', 'unkind',
+            'rude', 'impolite', 'disrespectful', 'offensive', 'insulting', 'hurtful', 'annoying', 'irritating',
+            'frustrating', 'boring', 'dull', 'tedious', 'uninteresting', 'lame', 'pathetic', 'weak', 'useless',
+            'worthless', 'incompetent', 'incapable', 'unsuccessful', 'failure', 'loser', 'despicable', 'contemptible'
+        ];
+
+        function analyzeText(text) {
+            const words = text.toLowerCase().split(/\s+/);
+            let positiveCount = 0;
+            let negativeCount = 0;
+
+            words.forEach(word => {
+                if (positiveWords.includes(word)) positiveCount++;
+                if (negativeWords.includes(word)) negativeCount++;
+            });
+
+            if (positiveCount > negativeCount) return 'positive';
+            if (negativeCount > positiveCount) return 'negative';
+            return 'neutral';
+        }
+
+        input.addEventListener('input', function() {
+            const sentiment = analyzeText(this.value);
+            if (sentiment === 'positive') {
+                face.textContent = '😊';
+            } else if (sentiment === 'negative') {
+                face.textContent = '😢';
+            } else {
+                face.textContent = '😐';
+            }
+        });
+
+        function checkInput() {
+            const sentiment = analyzeText(input.value);
+            if (sentiment === 'positive') {
+                face.textContent = '😁';
+                message.textContent = 'Correct! You made the face happy!';
+                message.className = 'mt-4 font-bold text-green-500';
+            } else {
+                face.textContent = '😭';
+                message.textContent = 'Wrong! Try saying something nice.';
+                message.className = 'mt-4 font-bold text-red-500';
+            }
+        }
+    </script>
+</body>
+</html>
